@@ -1,8 +1,11 @@
 const express = require('express');
 const bcrypt = require('bcrypt-nodejs');
+const cors = require('cors');
+
 const app = express();
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
+app.use(cors());
 
 const db = {
     users: [
@@ -41,6 +44,7 @@ function getUser(id) {
 app.get('/', (req, res) => {
     //res.send('this is working');
     res.send(db.users);
+    //res.json(db.users);
 })
 
 /*
@@ -73,9 +77,9 @@ app.post('/register', (req, res) => {
 app.post('/signin', (req, res) => {
     // check input with current list of users & if passwords match
     // Load hash from your password DB.
-    bcrypt.compare("bacon", hash, function(err, res) {
-        // res == true
-    });
+    //bcrypt.compare("bacon", hash, function(err, res) {
+    //    // res == true
+    //});
     if (req.body.email === db.users[0].email &&
         req.body.password === db.users[0].password) {
             res.json('success');
