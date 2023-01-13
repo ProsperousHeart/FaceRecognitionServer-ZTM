@@ -67,7 +67,7 @@ app.post('/register', (req, res) => {
         id: '126',
         name: name,
         email: email,
-        password: password,
+        //password: password,
         entries: 0,
         joined: new Date()
     })
@@ -82,10 +82,11 @@ app.post('/signin', (req, res) => {
     //});
     if (req.body.email === db.users[0].email &&
         req.body.password === db.users[0].password) {
-            res.json('success');
-        } else {
-            res.status(400).json('Error loggin in');
-        }
+            //res.json('success');
+            res.status(200).json(db.users[0]);
+    } else {
+        res.status(400).json('Error logging in');
+    }
 })
 
 app.get('/profile/:id', (req, res) => {
@@ -110,7 +111,7 @@ app.put('/image', (req, res) => {
         if (user.id === id) {
             found = true;
             user.entries++;
-            return res.json(user);
+            return res.json(user.entries);
         }
     })
     if (!found) {
