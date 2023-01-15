@@ -77,12 +77,10 @@ app.get('/', (req, res) => {
     /image --> PUT --> user
  */
 
-app.post('/register', (req, res) => { register.handleRegister(req, res, db, bcrypt) }) // dependency injuection
-
-app.post('/signin', (req, res) => { signIn.handleSignIn(req, res, db, bcrypt) })
-
+app.post('/register', (req, res) => { register.handleRegister(req, res, db, bcrypt) }) // dependency injuection;
+// app.post('/signin', (req, res) => { signIn.handleSignIn(req, res, db, bcrypt) })
+app.post('/signin', signIn.handleSignIn(db, bcrypt) )
 app.get('/profile/:id', (req, res) => { profile.handleProfile(req, res, db) })
-
 app.put('/image', (req, res) => { image.handleIMG(req, res, db) })
 
 //bcrypt.compare("veggies", hash, function(err, res) {

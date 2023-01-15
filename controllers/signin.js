@@ -1,4 +1,5 @@
-const handleSignIn = (req, res, db, bcrypt) => {
+//const handleSignIn = (req, res, db, bcrypt) => {
+const handleSignIn = (db, bcrypt) => (req, res) => {
     // check input with current list of users & if passwords match
     
     // Load hash from your password DB.
