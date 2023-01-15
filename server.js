@@ -4,13 +4,17 @@ const express = require('express');
 const bcrypt = require('bcrypt-nodejs');
 const cors = require('cors');
 
+const register = require("./controllers/register");
+
 const db = require('knex')({
     client: 'pg',
     connection: { // connection: process.env.PG_CONNECTION_STRING,
         host : '127.0.0.1',
         port : 5432,
-        user : 'sbrain',
-        password : 'Sm4rtBr41n2023!',
+        // user : 'sbrain',
+        user: 'postgres',
+        // password : 'Sm4rtBr41n2023!',
+        password : 'P0stgr3SQL69!',
         database : "smart-brain"
     }
     //searchPath: ['knex', 'public'],
@@ -70,48 +74,7 @@ app.get('/', (req, res) => {
     /image --> PUT --> user
  */
 
-app.post('/register', (req, res) => {
-    // create new profile
-    const { email, name, password} = req.body // destructuring
-    //bcrypt.hash(password, null, null, function(err, hash) {
-    //    // Store hash in your password DB.
-    //    console.log(hash);
-    //});
-    //db.users.push({
-    //    id: '126',
-    //    name: name,
-    //    email: email,
-    //    //password: password,
-    //    entries: 0,
-    //    joined: new Date()
-    //})
-    const hash = bcrypt.hashSync(password);
-    db.transaction(trx => {
-        trx.insert({
-            hash: hash,
-            email: email
-        })
-        .into('login')
-        .returning('email')
-        .then(loginEmail => {
-            return trx('users')
-                .returning('*')
-                .insert({
-                    email: loginEmail[0].email,
-                    name: name,
-                    joined: new Date()
-                //}).then(console.log)
-                })
-                //res.json(db_hc.users[db_hc.users.length - 1]);
-                .then(user => {
-                    res.status(200).json(user[0]);
-                })
-        })
-        .then(trx.commit)
-        .catch(trx.rollback)
-    })
-    .catch(err => res.status(400).json('unable to register'))
-})
+app.post('/register', (req, res) => { register.handleRegister(req, res, db, bcrypt) }) // dependency injuection
 
 app.post('/signin', (req, res) => {
     // check input with current list of users & if passwords match
@@ -125,13 +88,13 @@ app.post('/signin', (req, res) => {
     // } else {
     //     res.status(400).json('Error logging in');
     // }
-    //console.log(req.body);
     db.select('email', 'hash').from('login')
         .where('email', '=', req.body.email)
         .then(data => {
-            //console.log(data[0]);
+            // console.log(data[0]);
             //bcrypt.compare(req.body.password, data[0], function(err, res) {
             const isValid = bcrypt.compareSync(req.body.password, data[0].hash);
+            // console.log("isValid:", isValid);
             if (isValid) {
                 return db.select('*').from('users')
                     .where('email', '=', req.body.email)
