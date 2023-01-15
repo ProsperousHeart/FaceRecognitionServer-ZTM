@@ -6,6 +6,8 @@ const cors = require('cors');
 
 const register = require("./controllers/register");
 const signIn = require("./controllers/signin");
+const handleProfile = require("./controllers/profile");
+const { profile } = require('console');
 
 const db = require('knex')({
     client: 'pg',
@@ -79,29 +81,7 @@ app.post('/register', (req, res) => { register.handleRegister(req, res, db, bcry
 
 app.post('/signin', (req, res) => { signIn.handleSignIn(req, res, db, bcrypt) })
 
-app.get('/profile/:id', (req, res) => {
-    const { id } = req.params;
-    //let found = false;
-    //db.users.forEach(user => {
-    //    if (user.id === id) {
-    //        found = true;
-    //        return res.json(user);
-    //    }
-    //})
-    db.select('*').from('users').where({id}) // can do this because property & value are the same
-//        id: id
-//    })
-        .then(user => {
-            if (user.length) {
-                res.status(200).json(user[0]);
-            } else {
-                res.status(400).json('Error getting user.');
-            }
-        });
-//    if (!found) {
-//        res.status(400).json('not found');
-//    }
-})
+app.get('/profile/:id', (req, res) => { profile.handleProfile(req, res, db) })
 
 app.put('/image', (req, res) => {
     const { id } = req.body;
