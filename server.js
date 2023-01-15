@@ -82,6 +82,7 @@ app.post('/register', (req, res) => { register.handleRegister(req, res, db, bcry
 app.post('/signin', signIn.handleSignIn(db, bcrypt) )
 app.get('/profile/:id', (req, res) => { profile.handleProfile(req, res, db) })
 app.put('/image', (req, res) => { image.handleIMG(req, res, db) })
+app.post('/imageURL', (req, res) => { image.handleAPICall(req, res) })
 
 //bcrypt.compare("veggies", hash, function(err, res) {
 //    // res = false
